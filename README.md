@@ -1,12 +1,19 @@
 # FullStackSitePrevisaoTempo
 
 //////////////////////////////////// --- ////////////////////////////////////////////////////////////
+Tecnologias utilizadas:
+GitHub - Para versionamento - https://github.com/brunobento04/FullStackSitePrevisaoTempo#
+Angular - FrontEnd
+.NET 8.0 - BackEnd
+SQL Server - Banco de dados
+
+//////////////////////////////////// --- ////////////////////////////////////////////////////////////
 Necessidades da Aplicação:
 
 # Funcionalidades WEB
 
 - **Busca Climática:**
-    - Desenvolva uma interface em Angular que permita:
+    - Desenvolva uma interface em **Angular** que permita:
         - Buscar previsões do tempo por cidade.
         - Exibir os seguintes dados:
             - Temperatura atual.
@@ -25,7 +32,7 @@ Necessidades da Aplicação:
         - Temperatura máxima e mínima.
         - Ícones que representem as condições climáticas.
 - **Gerenciamento de Estado e Persistência:**
-    - Utilize o **BehaviorSubject** do RxJS ou **NgRx** para gerenciar o estado da aplicação.
+    - Utilize o **BehaviorSubject** do RxJS ou NgRx para gerenciar o estado da aplicação.
     - Armazene as cidades favoritas no **LocalStorage** para garantir persistência de dados.
 - **Ajustes Responsivos:**
     - Garanta que a interface funcione bem em dispositivos desktop e móveis:
@@ -38,15 +45,16 @@ Necessidades da Aplicação:
 - Tela inicial com busca, tela de favoritos e previsões.
 
 //////////////////////////////////// --- ////////////////////////////////////////////////////////////
+Necessidades da Aplicação:
 
 # Funcionalidades Backend
 
 > Essas serão as funcionalidades que devem ser implementadas.
 > 
 - **API REST:**
-    - Desenvolva uma API REST usando `.NET 6 ou superior`.
+    - Desenvolva uma API REST usando `  ou superior`.
     - Endpoints:
-        - Buscar previsão do tempo por cidade (integrado à API OpenWeatherMap/WeatherAPI).
+        - Buscar previsão do tempo por cidade (integrado à API **OpenWeatherMap**/WeatherAPI).
         - Adicionar cidade aos favoritos.
         - Listar cidades favoritas.
         - Remover cidade dos favoritos.
