@@ -2,7 +2,7 @@
 
 //////////////////////////////////// --- ////////////////////////////////////////////////////////////
 Tecnologias utilizadas:
-GitHub - Para versionamento - https://github.com/brunobento04/FullStackSitePrevisaoTempo#
+GitHub - Para versionamento
 Angular - FrontEnd
 .NET 8.0 - BackEnd
 SQL Server - Banco de dados
