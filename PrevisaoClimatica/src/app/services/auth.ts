@@ -14,8 +14,8 @@ export class Auth {
   
   // Aplicamos a interface Credentials. O erro tsc(7053) será resolvido.
   private validCredentials: Credentials = {
-      'usuario_teste': 'senha123',
-      'bruno': 'devangular'
+      'bruno': '123',
+      'bento': '456'
   };
 
   constructor() {

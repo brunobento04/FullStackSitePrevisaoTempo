@@ -1,1 +1,66 @@
-<p>login works!</p>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0">{{ isLoginMode ? 'Login de Usuário' : 'Novo Cadastro' }}</h4>
+      </div>
+      <div class="card-body">
+
+        <div *ngIf="mensagemErro" class="alert alert-danger" role="alert">
+          {{ mensagemErro }}
+        </div>
+        <div *ngIf="mensagemSucesso" class="alert alert-success" role="alert">
+          {{ mensagemSucesso }}
+        </div>
+        
+        <form (ngSubmit)="onSubmit()">
+          
+          <div class="mb-3">
+            <label for="usuario" class="form-label">Usuário</label>
+            <input 
+              type="text" 
+              id="usuario" 
+              name="usuario" 
+              class="form-control" 
+              [(ngModel)]="credenciais.usuario" 
+              required
+            >
+          </div>
+          
+          <div class="mb-4">
+            <label for="senha" class="form-label">Senha</label>
+            <input 
+              type="password" 
+              id="senha" 
+              name="senha" 
+              class="form-control" 
+              [(ngModel)]="credenciais.senha" 
+              required
+            >
+          </div>
+          
+          <div class="d-grid gap-2">
+            <button 
+              type="submit" 
+              class="btn btn-primary btn-lg"
+              [disabled]="!credenciais.usuario || !credenciais.senha"
+            >
+              {{ isLoginMode ? 'Entrar' : 'Cadastrar' }}
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="card-footer text-center">
+        <a 
+          href="#" 
+          (click)="toggleMode()" 
+          class="text-decoration-none"
+        >
+          {{ isLoginMode ? 'Não tem conta? Cadastre-se' : 'Já sou cadastrado? Fazer Login' }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
