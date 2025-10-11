@@ -4,6 +4,7 @@
 Tecnologias utilizadas:
 GitHub - Para versionamento
 Angular - FrontEnd
+Bootstrap - FrontEnd
 .NET 8.0 - BackEnd
 SQL Server - Banco de dados
 
