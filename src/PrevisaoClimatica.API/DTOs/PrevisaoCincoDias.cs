@@ -2,16 +2,18 @@ using System.Text.Json.Serialization;
 
 namespace PrevisaoClimatica.API.DTOs
 {
+
+
     public class ForecastItem
     {
         [JsonPropertyName("dt_txt")]
-        public DateTime DataHora { get; set; }
+         public string DataHora { get; set; } = string.Empty; 
 
         [JsonPropertyName("main")]
-        public WeatherMain Main { get; set; } 
+        public WeatherMain? Main { get; set; }
         
         [JsonPropertyName("weather")]
-        public List<WeatherInfo> Weather { get; set; } 
+        public List<WeatherInfo> Weather { get; set; } = new List<WeatherInfo>();
     }
 
     public class PrevisaoCincoDias
@@ -20,7 +22,7 @@ namespace PrevisaoClimatica.API.DTOs
         public List<ForecastItem> List { get; set; } = new List<ForecastItem>();
 
         [JsonPropertyName("city")]
-        public ForecastCity City { get; set; }
+        public ForecastCity? City { get; set; }
     }
     
     public class ForecastCity

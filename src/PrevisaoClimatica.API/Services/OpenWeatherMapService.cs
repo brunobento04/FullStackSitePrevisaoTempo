@@ -20,30 +20,39 @@ namespace PrevisaoClimatica.API.Services
         {
             _httpClient = httpClient;
             
+            // Leitura das configurações
             _apiKey = configuration["OpenWeatherMap:ApiKey"] 
                       ?? throw new ArgumentNullException("OpenWeatherMap:ApiKey não configurada.");
             _baseUrl = configuration["OpenWeatherMap:BaseUrl"] 
                        ?? throw new ArgumentNullException("OpenWeatherMap:BaseUrl não configurada.");
 
-            _httpClient.BaseAddress = new Uri(_baseUrl);
+            // IMPORTANTE: REMOVEMOS A DEFINIÇÃO DE BaseAddress AQUI.
+            // _httpClient.BaseAddress = new Uri(_baseUrl); // <--- REMOVIDO!
+            
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
         
+        // REVISADO: Constrói a URL completa em cada chamada
         public async Task<OpenWeatherMapResponse?> GetCurrentWeatherAsync(string city)
         {
-            // Parâmetros: q={city}, appid={key}, units=metric (Celsius), lang=pt_br
-            string url = $"/weather?q={city}&appid={_apiKey}&units=metric&lang=pt_br";
+            // Constrói a URL COMPLETA usando a BaseUrl lida do appsettings.json
+            string url = $"{_baseUrl}/weather?q={city}&appid={_apiKey}&units=metric&lang=pt_br"; 
 
             try
             {
-                var response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode(); // Lança exceção para status 4xx/5xx
+                // Envia a URL completa, evitando o problema de combinação BaseAddress + URL Relativa
+                var response = await _httpClient.GetAsync(url); 
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Erro OpenWeatherMap {response.StatusCode}: {await response.Content.ReadAsStringAsync()}");
+                    return null; 
+                }
 
                 var content = await response.Content.ReadAsStringAsync();
                 
-                // Deserializa o JSON
                 var weatherData = JsonSerializer.Deserialize<OpenWeatherMapResponse>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -51,21 +60,28 @@ namespace PrevisaoClimatica.API.Services
                 
                 return weatherData;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao buscar previsão atual para {city}: {ex.Message}");
+                Console.WriteLine($"ERRO FATAL ao buscar previsão atual: {ex.Message}");
                 return null;
             }
         }
-    
+        
+        // REVISADO: Constrói a URL completa em cada chamada
         public async Task<PrevisaoCincoDias?> GetFiveDayForecastAsync(string city)
         {
-            string url = $"/forecast?q={city}&appid={_apiKey}&units=metric&lang=pt_br";
+            // Constrói a URL COMPLETA usando a BaseUrl lida do appsettings.json
+            string url = $"{_baseUrl}/forecast?q={city}&appid={_apiKey}&units=metric&lang=pt_br"; 
 
             try
             {
                 var response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Erro OpenWeatherMap {response.StatusCode}: {await response.Content.ReadAsStringAsync()}");
+                    return null; 
+                }
 
                 var content = await response.Content.ReadAsStringAsync();
 
@@ -76,9 +92,9 @@ namespace PrevisaoClimatica.API.Services
 
                 return forecastData;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao buscar previsão de 5 dias para {city}: {ex.Message}");
+                Console.WriteLine($"ERRO FATAL ao buscar previsão de 5 dias: {ex.Message}");
                 return null;
             }
         }

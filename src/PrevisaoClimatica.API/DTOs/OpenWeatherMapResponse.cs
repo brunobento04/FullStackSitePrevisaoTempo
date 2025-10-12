@@ -23,18 +23,18 @@ namespace PrevisaoClimatica.API.DTOs
         public string Descricao { get; set; }
 
         [JsonPropertyName("icon")]
-        public string Icone { get; set; } 
+        public string Icone { get; set; } // Código de ícone do OpenWeatherMap (ex: 04d)
     }
 
     public class OpenWeatherMapResponse
     {
         [JsonPropertyName("name")]
-        public string Cidade { get; set; }
+        public string Cidade { get; set; } = string.Empty;
 
         [JsonPropertyName("main")]
-        public WeatherMain Main { get; set; }
+        public WeatherMain? Main { get; set; }
 
         [JsonPropertyName("weather")]
-        public List<WeatherInfo> Weather { get; set; }
+        public List<WeatherInfo> Weather { get; set; } = new List<WeatherInfo>();
     }
 }
