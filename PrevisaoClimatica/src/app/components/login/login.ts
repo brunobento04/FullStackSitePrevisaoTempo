@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';     
 import { CommonModule } from '@angular/common';  
-import { Auth } from '../../services/auth'; 
+import { Auth } from '../../services/Auth/auth'; 
 
 // interfaces para os dados do formulário
 interface Credenciais {

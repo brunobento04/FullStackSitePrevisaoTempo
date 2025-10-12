@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs'; // <-- Importe BehaviorSubject e Observable
 
-// Define um tipo para o objeto que pode ser indexado por strings
+// (Manter a interface Credentials se você usou para corrigir o erro)
 interface Credentials {
     [key: string]: string;
 }
@@ -9,63 +10,59 @@ interface Credentials {
   providedIn: 'root'
 })
 export class Auth {
-  private loggedIn = false; 
   private readonly USER_KEY = 'isAuthenticated';
   
-  // Aplicamos a interface Credentials. O erro tsc(7053) será resolvido.
+  private loggedInSubject = new BehaviorSubject<boolean>(
+    localStorage.getItem(this.USER_KEY) === 'true'
+  ); 
+  
+  isLoggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
+
   private validCredentials: Credentials = {
       'bruno': '123',
-      'bento': '456'
+      'joao': '456'
   };
 
-  constructor() {
-    this.loggedIn = localStorage.getItem(this.USER_KEY) === 'true';
-  }
+  constructor() {} 
 
   /**
    * Simula o login.
    */
   login(usuario: string, senha: string): boolean {
-    // Agora o acesso é permitido pelo TypeScript
     const senhaCorreta = this.validCredentials[usuario];
 
     if (senhaCorreta && senha === senhaCorreta) {
-      this.loggedIn = true;
+      this.loggedInSubject.next(true); 
       localStorage.setItem(this.USER_KEY, 'true'); 
       return true;
     }
 
-    this.loggedIn = false;
+    this.loggedInSubject.next(false);
     localStorage.setItem(this.USER_KEY, 'false');
     return false;
   }
   
   /**
-   * Simula a criação de um novo usuário.
+   * Realiza o logout, limpando o estado e o cache.
    */
+  logout(): void {
+    // 5. LOGOUT: Emite o novo estado 'false' e remove do cache
+    this.loggedInSubject.next(false);
+    localStorage.removeItem(this.USER_KEY);
+  }
+  
+  isLoggedIn(): boolean {
+      return this.loggedInSubject.value;
+  }
+  
+  // (Manter o método register...)
   register(usuario: string, senha: string): boolean {
-      // Verifica se o usuário já existe
       if (this.validCredentials[usuario]) {
           console.log(`Usuário ${usuario} já existe.`);
           return false;
       }
-      
-      // Simula o salvamento do novo usuário
       this.validCredentials[usuario] = senha;
       console.log(`Usuário ${usuario} registrado com sucesso!`);
-      
       return true;
-  }
-
-   // Realiza o logout, limpando o estado e o cache.
-  logout(): void {
-    this.loggedIn = false;
-    localStorage.removeItem(this.USER_KEY);
-  }
-
-  
-  // Retorna o estado atual de login.
-  isLoggedIn(): boolean {
-    return this.loggedIn;
   }
 }
