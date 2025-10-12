@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError, map } from 'rxjs/operators'; // Certifique-se de importar 'map'
+import { tap, catchError, map } from 'rxjs/operators'; 
 
-// Interfaces simplificadas para DTOs
 interface AuthResponse {
   token: string;
 }
@@ -14,8 +13,6 @@ interface AuthResponse {
 export class Auth {
   private http = inject(HttpClient);
   
-  // URL base do seu Backend .NET (AJUSTE A PORTA SE NECESSÁRIO)
-  // Certifique-se de que a porta aqui corresponde à porta que o seu Back-end está rodando (ex: 5000 ou 7000)
   private readonly BASE_URL = 'http://localhost:5168/api/Auth'; 
   
   private readonly TOKEN_KEY = 'authToken';
@@ -38,7 +35,7 @@ export class Auth {
   /**
    * Conecta ao endpoint /api/Auth/login e armazena o JWT.
    * Retorna Observable<boolean> para indicar sucesso ou falha no login.
-   */
+  */
   login(usuario: string, senha: string): Observable<boolean> {
     const credenciais = { username: usuario, password: senha }; // DTO para o Backend
 
@@ -64,7 +61,7 @@ export class Auth {
   /**
    * Conecta ao endpoint /api/Auth/register e armazena o JWT (login automático).
    * Retorna Observable<boolean> para indicar sucesso ou falha.
-   */
+  */
   register(usuario: string, senha: string): Observable<boolean> {
     const credenciais = { username: usuario, password: senha };
 
@@ -88,7 +85,7 @@ export class Auth {
 
   /**
    * Realiza o logout, limpando o token e atualizando o estado.
-   */
+  */
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this.loggedInSubject.next(false);
@@ -96,7 +93,7 @@ export class Auth {
 
   /**
    * Retorna o estado de login de forma síncrona.
-   */
+  */
   isLoggedIn(): boolean {
     return this.loggedInSubject.value;
   }

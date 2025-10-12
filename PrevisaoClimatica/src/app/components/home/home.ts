@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router'; 
 import { Weather, PrevisaoAtual } from '../../services/Weather/weather';
-import { FavoritosService } from '../../services/Favoritos/favoritos'; // Importar para adicionar aos favoritos
+import { FavoritosService } from '../../services/Favoritos/favoritos'; 
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs'; 
 

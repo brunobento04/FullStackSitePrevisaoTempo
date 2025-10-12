@@ -3,9 +3,9 @@ import { BehaviorSubject, Observable, of, forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { switchMap, tap, map, catchError } from 'rxjs/operators';
 import { Weather, PrevisaoAtual } from '../Weather/weather'; 
-import { Auth } from '../Auth/auth'; // Importa o AuthService para checar o login
+import { Auth } from '../Auth/auth';
 
-// Interfaces DTO (Correspondem aos DTOs do .NET)
+
 interface FavoritoDTO {
     cidadeNome: string;
 }
@@ -21,10 +21,9 @@ export class FavoritosService {
   private weatherService = inject(Weather);
   private authService = inject(Auth); // Injeta o AuthService
   
-  // URL base do Back-end .NET (AJUSTE A PORTA SE NECESSÁRIO)
+ 
   private readonly BASE_URL = 'http://localhost:5168/api/favoritos'; 
   
-  // BehaviorSubject que armazena APENAS os nomes das cidades (strings)
   private favoritosSubject = new BehaviorSubject<string[]>([]);
   favoritos$: Observable<string[]> = this.favoritosSubject.asObservable();
 
@@ -44,7 +43,7 @@ export class FavoritosService {
   /**
    * 1. Chama a API protegida para LISTAR favoritos do usuário.
    * 2. Atualiza o BehaviorSubject com os nomes das cidades.
-   */
+  */
   getFavoritos(): Observable<string[]> {
     if (!this.isLoggedIn()) {
         this.favoritosSubject.next([]);
@@ -68,7 +67,7 @@ export class FavoritosService {
 
   /**
    * Adiciona uma cidade aos favoritos via API (protegida).
-   */
+  */
   adicionarFavorito(cidade: string): Observable<boolean> {
     if (!this.isLoggedIn()) return of(false);
 
@@ -87,7 +86,7 @@ export class FavoritosService {
 
   /**
    * Remove uma cidade dos favoritos via API (protegida).
-   */
+  */
   removerFavorito(cidade: string): Observable<boolean> {
     if (!this.isLoggedIn()) return of(false);
     
@@ -105,8 +104,7 @@ export class FavoritosService {
 
   /**
    * Combina a lista de nomes de favoritos (via Subject) com a previsão atual.
-   * Este é o método que o componente Favoritos.ts usa.
-   */
+  */
   getFavoritosComPrevisao(): Observable<FavoritoComPrevisao[]> {
     // Primeiro, recarrega a lista de nomes da API (protegida) para ter os dados mais recentes
     this.getFavoritos().subscribe(); 

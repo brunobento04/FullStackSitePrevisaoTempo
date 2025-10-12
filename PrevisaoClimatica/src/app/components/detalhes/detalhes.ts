@@ -47,7 +47,7 @@ export class Detalhes implements OnInit {
 
   /**
    * Adiciona a cidade atual aos favoritos, usando a mesma lógica do Home.
-   */
+  */
   adicionarAosFavoritos(cidade: string) {
     if (!this.favoritosService.isLoggedIn()) {
         alert("Você precisa fazer login para adicionar favoritos.");

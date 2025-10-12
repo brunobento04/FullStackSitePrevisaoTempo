@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs'; // Necessário para tipagem
+import { Observable } from 'rxjs'; 
 import { Auth } from '../../services/Auth/auth'; 
 
 // Defina as interfaces para os dados do formulário
@@ -45,7 +45,7 @@ export class Login {
 
   // Alterna o modo de formulário e previne o comportamento padrão do link
   toggleMode(event: Event) {
-    event.preventDefault(); // <-- CORREÇÃO: Impede que o link vá para o topo da página
+    event.preventDefault(); 
     
     this.isLoginMode = !this.isLoginMode;
     this.mensagemErro = null;

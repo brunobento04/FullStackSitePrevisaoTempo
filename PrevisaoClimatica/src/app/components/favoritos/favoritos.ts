@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-// Importa o Service e o tipo de retorno (que é o mesmo da Previsão Atual)
 import { FavoritosService, FavoritoComPrevisao } from '../../services/Favoritos/favoritos'; 
 
 @Component({
@@ -30,7 +29,7 @@ export class Favoritos implements OnInit {
 
   /**
    * Inicializa o carregamento da lista de favoritos do usuário.
-   */
+  */
   carregarFavoritos(): void {
     this.carregando = true;
     
