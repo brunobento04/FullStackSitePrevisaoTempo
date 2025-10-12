@@ -10,13 +10,13 @@ namespace PrevisaoClimatica.API.Models
         
         [Required]
         [MaxLength(100)]
-        public string Username { get; set; } // Usado para login
+        public string Username { get; set; } 
         
         [Required]
-        public byte[] PasswordHash { get; set; } // Armazenamento seguro de senha
+        public byte[] PasswordHash { get; set; } 
         
         [Required]
-        public byte[] PasswordSalt { get; set; } // Sal para hashing
+        public byte[] PasswordSalt { get; set; } 
         
         // Relacionamento com Favoritos
         public ICollection<CidadeFavorita> CidadesFavoritas { get; set; }

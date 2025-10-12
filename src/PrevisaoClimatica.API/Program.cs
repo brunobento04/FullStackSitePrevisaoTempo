@@ -1,49 +1,71 @@
-// Program.cs
 using PrevisaoClimatica.API.Data;
 using Microsoft.EntityFrameworkCore;
+using PrevisaoClimatica.API.Services; // Para o IOpenWeatherMapService
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicionar Cors (Para o Angular)
+// ====================================================================
+// 1. CONFIGURAÇÃO DO CORS (Permite que o Front-end Angular acesse)
+// ====================================================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
         policy =>
         {
-            // Adapte o endereço do seu front-end Angular (padrão é 4200)
+            // O Front-end Angular geralmente roda na porta 4200
             policy.WithOrigins("http://localhost:4200") 
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
 
-// Adicionar DbContext (EF Core)
+// ====================================================================
+// 2. CONFIGURAÇÃO DO BANCO DE DADOS (SQL Server via EF Core)
+// ====================================================================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
+
+// ====================================================================
+// 3. INJEÇÃO DE DEPENDÊNCIA DE SERVIÇOS
+// ====================================================================
+
+// A. Serviço do OpenWeatherMap (Usa IHttpClientFactory)
+// Registra o IOpenWeatherMapService e o HttpClient associado
+builder.Services.AddHttpClient<IOpenWeatherMapService, OpenWeatherMapService>();
+
+// B. Serviços de Autenticação e Favoritos (Futuro - Implementaremos em breve)
+// builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+// builder.Services.AddScoped<IFavoritosRepository, FavoritosRepository>();
+
+// ====================================================================
+// 4. SERVIÇOS PADRÃO ASP.NET CORE
+// ====================================================================
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ====================================================================
+// 5. PIPELINE DE MIDDLEWARE (Ordem é importante!)
+// ====================================================================
+
+// Desenvolvimento: Ativa Swagger para documentação e testes
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection(); // Se você não usou --no-https
+// app.UseHttpsRedirection(); // Se você habilitou HTTPS
 
-// Usar Cors
+// Adiciona o middleware de CORS antes da Autorização
 app.UseCors("CorsPolicy"); 
 
-app.UseAuthorization();
+app.UseAuthorization(); 
 
 app.MapControllers();
 
-app.Run();  
+app.Run();

@@ -9,12 +9,11 @@ namespace PrevisaoClimatica.API.Models
         
         [Required]
         [MaxLength(255)]
-        public string Nome { get; set; } // Nome da cidade
+        public string Nome { get; set; } 
         
         [Required]
         public int UsuarioId { get; set; }
         
-        // Propriedade de Navegação
         public Usuario Usuario { get; set; }
     }
 }
