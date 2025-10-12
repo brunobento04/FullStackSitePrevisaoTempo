@@ -10,14 +10,14 @@ namespace PrevisaoClimatica.API.Models
         
         [Required]
         [MaxLength(100)]
-        [Column("Nome")]
+        [Column("Nome")] // Mapeia a propriedade C# Username para a coluna SQL 'Nome'
         public string Username { get; set; } = string.Empty;
         
         [Required]
-        [Column("Senha")] 
-        public string Password { get; set; } = string.Empty;
+        [Column("Senha")] // Mapeia a propriedade C# Password para a coluna SQL 'Senha'
+        public string Password { get; set; } = string.Empty; // Senha em Texto Puro (Treinamento)
         
-        // Relacionamento com Favoritos (Manter)
-        public ICollection<Favorito> Favoritos { get; set; } = new List<Favorito>();
+        // Propriedade de navegação
+        public ICollection<CidadeFavorita> CidadesFavoritas { get; set; } = new List<CidadeFavorita>();
     }
 }

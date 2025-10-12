@@ -16,7 +16,7 @@ namespace PrevisaoClimatica.API.Repositories
         public async Task<Usuario?> Register(Usuario user, string password)
         {
             if (await UserExists(user.Username))
-                return null; // Usuário já existe
+                return null; 
             
             user.Password = password; 
 
@@ -36,12 +36,13 @@ namespace PrevisaoClimatica.API.Repositories
 
         public async Task<Usuario?> Login(string username, string password)
         {
-            // Busca o usuário pelo Username (que mapeia para a coluna Nome)
+            // Busca pelo Username (que mapeia para a coluna 'Nome')
             var user = await _context.Usuarios.FirstOrDefaultAsync(x => x.Username == username);
 
             if (user == null)
                 return null; // Usuário não encontrado
 
+            // Compara a senha em texto puro (coluna 'Senha')
             if (user.Password != password) 
                 return null; // Senha incorreta
 
@@ -50,6 +51,7 @@ namespace PrevisaoClimatica.API.Repositories
 
         public async Task<bool> UserExists(string username)
         {
+            // Verifica se existe algum usuário com o Nome (mapeado de Username)
             if (await _context.Usuarios.AnyAsync(x => x.Username == username))
                 return true;
             return false;
