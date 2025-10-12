@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PrevisaoClimatica.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eaa2d7aadfcd7299d3a5969ab4611a4760ec16e9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c91c120ff6588eb52d5180e85906eac2f43592e")]
 [assembly: System.Reflection.AssemblyProductAttribute("PrevisaoClimatica.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PrevisaoClimatica.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,9 +1,9 @@
 using PrevisaoClimatica.API.Data;
 using Microsoft.EntityFrameworkCore;
 using PrevisaoClimatica.API.Services;
-using PrevisaoClimatica.API.Repositories; // Para IAuthRepository
+using PrevisaoClimatica.API.Repositories; 
 
-// Usings para JWT
+// Usings para JWT e Segurança
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -20,7 +20,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Injetar Repositórios
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-// builder.Services.AddScoped<IFavoritosRepository, FavoritosRepository>(); // Será injetado no próximo passo
+// INJEÇÃO FINALIZADA: Repositório de Favoritos
+builder.Services.AddScoped<IFavoritosRepository, FavoritosRepository>(); 
 
 // Configurar o HttpClient para o OpenWeatherMapService (Cliente Tipado)
 builder.Services.AddHttpClient<IOpenWeatherMapService, OpenWeatherMapService>();
@@ -69,8 +70,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// app.UseHttpsRedirection(); 
 
 // 1. CORS deve vir antes de qualquer autenticação/autorização
 app.UseCors("CorsPolicy"); 
