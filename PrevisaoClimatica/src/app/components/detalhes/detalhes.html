@@ -16,18 +16,18 @@
                     </div>
                     
                     <div class="col-md-4 text-center mb-3 mb-md-0">
-                        <h2 class="display-3 fw-bold">{{ atual.temperatura }}°C</h2>
+                        <h2 class="display-3 fw-bold">{{ atual.temperatura | number:'1.0-0' }}°C</h2>
                     </div>
                     
                     <div class="col-md-5">
                         <ul class="list-unstyled fs-5">
                             <li>
                                 <i class="bi bi-thermometer-high me-2"></i> Máxima: 
-                                <b>{{ atual.tempMax }}°C</b>
+                                <b>{{ atual.tempMax | number:'1.0-0' }}°C</b>
                             </li>
                             <li>
                                 <i class="bi bi-thermometer-low me-2"></i> Mínima: 
-                                <b>{{ atual.tempMin }}°C</b>
+                                <b>{{ atual.tempMin | number:'1.0-0' }}°C</b>
                             </li>
                             <li>
                                 <i class="bi bi-droplet-half me-2"></i> Umidade: 
@@ -55,15 +55,14 @@
                     </div>
                     <div class="card-footer bg-white">
                         <p class="mb-0 fs-5">
-                            Máx: <b class="text-danger">{{ dia.tempMax }}°C</b>
+                            Máx: <b class="text-danger">{{ dia.tempMax | number:'1.0-0' }}°C</b>
                         </p>
                         <p class="mb-0 fs-6">
-                            Mín: <b class="text-primary">{{ dia.tempMin }}°C</b>
+                            Mín: <b class="text-primary">{{ dia.tempMin | number:'1.0-0' }}°C</b>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        
     </ng-container>
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router'; 
 import { Weather, PrevisaoAtual } from '../../services/Weather/weather';
+import { FavoritosService } from '../../services/Favoritos/favoritos'; // Importar para adicionar aos favoritos
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs'; 
 
@@ -15,6 +16,7 @@ import { of } from 'rxjs';
 })
 export class Home {
   private weatherService = inject(Weather);
+  private favoritosService = inject(FavoritosService);
   private router = inject(Router);
   
   cidadePesquisa: string = '';
@@ -36,11 +38,13 @@ export class Home {
     
     const cidadeFormatada = this.cidadePesquisa.trim();
 
+    // Chamada real ao WeatherService
     this.weatherService.getPrevisaoAtual(cidadeFormatada)
       .pipe(
         catchError(err => {
-          this.erro = 'Não foi possível obter a previsão para esta cidade. Tente novamente.';
-          console.error('Erro no mock/API:', err);
+          // Captura erro 404 (Cidade não encontrada) ou erro de servidor
+          this.erro = 'Não foi possível obter a previsão para esta cidade. Verifique o nome.';
+          console.error('Erro na API:', err);
           this.carregando = false;
           return of(null); 
         })
@@ -58,6 +62,13 @@ export class Home {
   }
   
   adicionarAosFavoritos(cidade: string) {
-    alert(`MOCK: Cidade ${cidade} adicionada aos favoritos!`);
+    // Chamada real ao FavoritosService (protegida por JWT)
+    this.favoritosService.adicionarFavorito(cidade).subscribe(sucesso => {
+      if (sucesso) {
+        alert(`Cidade ${cidade} adicionada aos seus favoritos!`);
+      } else {
+        alert(`Falha ao adicionar: A cidade ${cidade} já pode estar na lista.`);
+      }
+    });
   }
 }

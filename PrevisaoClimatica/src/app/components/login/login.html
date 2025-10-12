@@ -55,8 +55,7 @@
       <div class="card-footer text-center">
         <a 
           href="#" 
-          (click)="toggleMode()" 
-          class="text-decoration-none"
+          (click)="toggleMode($event)"  class="text-decoration-none"
         >
           {{ isLoginMode ? 'Não tem conta? Cadastre-se' : 'Já sou cadastrado? Fazer Login' }}
         </a>
