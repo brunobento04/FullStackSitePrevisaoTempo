@@ -1,46 +1,58 @@
 using PrevisaoClimatica.API.Data;
 using Microsoft.EntityFrameworkCore;
-using PrevisaoClimatica.API.Services; // Para o IOpenWeatherMapService
+using PrevisaoClimatica.API.Services;
+using PrevisaoClimatica.API.Repositories; // Para IAuthRepository
+
+// Usings para JWT
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ====================================================================
-// 1. CONFIGURAÇÃO DO CORS (Permite que o Front-end Angular acesse)
+// 1. CONFIGURAÇÃO DE SERVIÇOS
 // ====================================================================
+
+// Adicionar DbContext (SQL Server via EF Core)
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Injetar Repositórios
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+// builder.Services.AddScoped<IFavoritosRepository, FavoritosRepository>(); // Será injetado no próximo passo
+
+// Configurar o HttpClient para o OpenWeatherMapService (Cliente Tipado)
+builder.Services.AddHttpClient<IOpenWeatherMapService, OpenWeatherMapService>();
+
+// Configuração do CORS (Permite acesso do Front-end Angular na porta 4200)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
         policy =>
         {
-            // O Front-end Angular geralmente roda na porta 4200
             policy.WithOrigins("http://localhost:4200") 
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
 
-// ====================================================================
-// 2. CONFIGURAÇÃO DO BANCO DE DADOS (SQL Server via EF Core)
-// ====================================================================
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Configuração do JWT Bearer Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            // Pega a chave secreta do appsettings.json
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
+            ValidateIssuer = false, 
+            ValidateAudience = false 
+        };
+    });
 
-
-// ====================================================================
-// 3. INJEÇÃO DE DEPENDÊNCIA DE SERVIÇOS
-// ====================================================================
-
-// A. Serviço do OpenWeatherMap (Usa IHttpClientFactory)
-// Registra o IOpenWeatherMapService e o HttpClient associado
-builder.Services.AddHttpClient<IOpenWeatherMapService, OpenWeatherMapService>();
-
-// B. Serviços de Autenticação e Favoritos (Futuro - Implementaremos em breve)
-// builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-// builder.Services.AddScoped<IFavoritosRepository, FavoritosRepository>();
-
-// ====================================================================
-// 4. SERVIÇOS PADRÃO ASP.NET CORE
-// ====================================================================
+// Adicionar Controllers e Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,21 +61,24 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // ====================================================================
-// 5. PIPELINE DE MIDDLEWARE (Ordem é importante!)
+// 2. PIPELINE DE MIDDLEWARE (Ordem é crucial!)
 // ====================================================================
 
-// Desenvolvimento: Ativa Swagger para documentação e testes
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection(); // Se você habilitou HTTPS
+// app.UseHttpsRedirection(); 
 
-// Adiciona o middleware de CORS antes da Autorização
+// 1. CORS deve vir antes de qualquer autenticação/autorização
 app.UseCors("CorsPolicy"); 
 
+// 2. Autenticação (JWT)
+app.UseAuthentication(); 
+
+// 3. Autorização (Verificação de permissões do usuário)
 app.UseAuthorization(); 
 
 app.MapControllers();

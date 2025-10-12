@@ -1,0 +1,85 @@
+using Microsoft.AspNetCore.Mvc;
+using PrevisaoClimatica.API.DTOs;
+using PrevisaoClimatica.API.Models;
+using PrevisaoClimatica.API.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+namespace PrevisaoClimatica.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")] // Rota base: /api/auth
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthRepository _repo;
+        private readonly IConfiguration _config;
+
+        public AuthController(IAuthRepository repo, IConfiguration config)
+        {
+            _repo = repo;
+            _config = config;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+        {
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+
+            if (await _repo.UserExists(userForRegisterDto.Username))
+                return BadRequest("Usuário já existe.");
+
+            var userToCreate = new Usuario
+            {
+                Username = userForRegisterDto.Username
+            };
+
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+
+            if (createdUser == null)
+                return StatusCode(500, "Falha ao registrar usuário.");
+
+            // Retorna o JWT para login automático após o registro
+            return Ok(new { token = GenerateJwtToken(createdUser) });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        {
+            var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+
+            if (userFromRepo == null)
+                return Unauthorized("Usuário ou senha inválidos.");
+
+            var tokenString = GenerateJwtToken(userFromRepo);
+
+            return Ok(new { token = tokenString });
+        }
+
+        // --- Geração do Token JWT ---
+        private string GenerateJwtToken(Usuario user)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(7), // Token expira em 7 dias
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+    }
+}
