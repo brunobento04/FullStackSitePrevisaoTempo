@@ -9,6 +9,16 @@
         <div class="card bg-primary text-white mb-5 shadow-lg">
             <div class="card-body">
                 <div class="row align-items-center">
+
+                    <div class="col-md-12 text-end mb-3">
+                        <button 
+                            class="btn btn-warning btn-lg"
+                            (click)="adicionarAosFavoritos(cidade)"
+                        >
+                            <i class="bi bi-star-fill me-2"></i>
+                            Adicionar aos Favoritos
+                        </button>
+                    </div>
                     
                     <div class="col-md-3 text-center mb-3 mb-md-0">
                         <i class="bi {{ atual.icone }}" style="font-size: 4rem;"></i>

@@ -61,13 +61,13 @@ export class Home {
     this.router.navigate(['/detalhes', cidade]);
   }
   
-  adicionarAosFavoritos(cidade: string) {
-    // Chamada real ao FavoritosService (protegida por JWT)
+ adicionarAosFavoritos(cidade: string) {
     this.favoritosService.adicionarFavorito(cidade).subscribe(sucesso => {
       if (sucesso) {
-        alert(`Cidade ${cidade} adicionada aos seus favoritos!`);
+        alert(`SUCESSO: Cidade ${cidade} adicionada aos seus favoritos!`);
       } else {
-        alert(`Falha ao adicionar: A cidade ${cidade} já pode estar na lista.`);
+        // Esta mensagem de erro cobre o erro de conflito (já existe) e outros erros de API/Auth.
+        alert(`FALHA: Não foi possível adicionar ${cidade} aos favoritos. Verifique seu login e se a cidade já existe.`);
       }
     });
   }
