@@ -1,1 +1,69 @@
-<p>detalhes works!</p>
+<div class="container mt-4">
+    <a routerLink="/home" class="btn btn-secondary mb-4">
+        <i class="bi bi-arrow-left"></i> Voltar para Pesquisa
+    </a>
+    
+    <h1 class="mb-4 text-primary">Previsão Detalhada para {{ cidade }}</h1>
+
+    <ng-container *ngIf="previsaoAtual$ | async as atual">
+        <div class="card bg-primary text-white mb-5 shadow-lg">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    
+                    <div class="col-md-3 text-center mb-3 mb-md-0">
+                        <i class="bi {{ atual.icone }}" style="font-size: 4rem;"></i>
+                        <p class="h5 mt-2">{{ atual.condicao }}</p>
+                    </div>
+                    
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <h2 class="display-3 fw-bold">{{ atual.temperatura }}°C</h2>
+                    </div>
+                    
+                    <div class="col-md-5">
+                        <ul class="list-unstyled fs-5">
+                            <li>
+                                <i class="bi bi-thermometer-high me-2"></i> Máxima: 
+                                <b>{{ atual.tempMax }}°C</b>
+                            </li>
+                            <li>
+                                <i class="bi bi-thermometer-low me-2"></i> Mínima: 
+                                <b>{{ atual.tempMin }}°C</b>
+                            </li>
+                            <li>
+                                <i class="bi bi-droplet-half me-2"></i> Umidade: 
+                                <b>{{ atual.umidade }}%</b>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <h2 class="mb-4 text-secondary">Próximos 5 Dias</h2>
+    
+    <ng-container *ngIf="previsao5Dias$ | async as previsao">
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+            <div class="col" *ngFor="let dia of previsao">
+                <div class="card h-100 text-center shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">{{ dia.data }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <i class="bi {{ dia.icone }}" style="font-size: 3rem;"></i>
+                        <p class="card-text mt-2 text-muted">{{ dia.condicao }}</p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <p class="mb-0 fs-5">
+                            Máx: <b class="text-danger">{{ dia.tempMax }}°C</b>
+                        </p>
+                        <p class="mb-0 fs-6">
+                            Mín: <b class="text-primary">{{ dia.tempMin }}°C</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </ng-container>
+</div>

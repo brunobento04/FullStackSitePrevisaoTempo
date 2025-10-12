@@ -1,1 +1,79 @@
-<p>home works!</p>
+<div class="row mb-5">
+  <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+    <div class="card shadow-lg p-4">
+      <h2 class="card-title text-center text-primary mb-4">Pesquisa de Previsão do Tempo</h2>
+
+      <form (ngSubmit)="pesquisarPrevisao()">
+        <div class="input-group input-group-lg">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Digite o nome da cidade (Ex: São Paulo, Rio de Janeiro)"
+            [(ngModel)]="cidadePesquisa"
+            name="cidadePesquisa"
+            required
+          >
+          <button class="btn btn-primary" type="submit" [disabled]="carregando">
+            <i class="bi bi-search"></i> Pesquisar
+          </button>
+        </div>
+      </form>
+      
+      <div *ngIf="erro" class="alert alert-danger mt-3">{{ erro }}</div>
+      <div *ngIf="carregando" class="text-center mt-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row" *ngIf="previsao">
+  <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+    <div class="card text-center text-white bg-primary bg-gradient shadow-lg">
+      <div class="card-header border-0">
+        <h3 class="mb-0">Previsão Atual em {{ previsao.cidade }}</h3>
+      </div>
+      <div class="card-body">
+        
+        <div class="row align-items-center mb-4">
+          <div class="col-12 col-md-6">
+            <i class="bi {{ previsao.icone }}" style="font-size: 5rem;"></i>
+            <p class="h4 mt-2">{{ previsao.condicao }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <h1 class="display-1 fw-bold">{{ previsao.temperatura }}°C</h1>
+          </div>
+        </div>
+        
+        <div class="row text-white fs-5 opacity-75">
+          <div class="col-4">
+            <p class="mb-0"><i class="bi bi-thermometer-low me-1"></i> Mínima</p>
+            <p class="fw-bold">{{ previsao.tempMin }}°C</p>
+          </div>
+          <div class="col-4">
+            <p class="mb-0"><i class="bi bi-thermometer-high me-1"></i> Máxima</p>
+            <p class="fw-bold">{{ previsao.tempMax }}°C</p>
+          </div>
+          <div class="col-4">
+            <p class="mb-0"><i class="bi bi-droplet-half me-1"></i> Umidade</p>
+            <p class="fw-bold">{{ previsao.umidade }}%</p>
+          </div>
+        </div>
+        
+      </div>
+      
+      <div class="card-footer d-flex justify-content-between border-0 bg-white bg-opacity-10">
+        <button class="btn btn-light" (click)="verDetalhes(previsao.cidade)">
+          <i class="bi bi-calendar-week me-2"></i> Ver Detalhes (5 Dias)
+        </button>
+        
+        <button class="btn btn-warning" (click)="adicionarAosFavoritos(previsao.cidade)">
+          <i class="bi bi-star-fill me-2"></i> Adicionar aos Favoritos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
