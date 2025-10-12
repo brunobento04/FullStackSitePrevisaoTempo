@@ -10,7 +10,7 @@ using System.Text;
 namespace PrevisaoClimatica.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")] // Rota base: /api/auth
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
@@ -27,12 +27,16 @@ namespace PrevisaoClimatica.API.Controllers
         {
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
+            // O EF Core faz a validação do [Required] e [MaxLength].
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
             if (await _repo.UserExists(userForRegisterDto.Username))
                 return BadRequest("Usuário já existe.");
 
             var userToCreate = new Usuario
             {
-                Username = userForRegisterDto.Username
+                Username = userForRegisterDto.Username,
             };
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
@@ -40,7 +44,6 @@ namespace PrevisaoClimatica.API.Controllers
             if (createdUser == null)
                 return StatusCode(500, "Falha ao registrar usuário.");
 
-            // Retorna o JWT para login automático após o registro
             return Ok(new { token = GenerateJwtToken(createdUser) });
         }
 
@@ -57,7 +60,6 @@ namespace PrevisaoClimatica.API.Controllers
             return Ok(new { token = tokenString });
         }
 
-        // --- Geração do Token JWT ---
         private string GenerateJwtToken(Usuario user)
         {
             var claims = new[]

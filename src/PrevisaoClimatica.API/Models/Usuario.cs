@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrevisaoClimatica.API.Models
 {
@@ -10,15 +10,14 @@ namespace PrevisaoClimatica.API.Models
         
         [Required]
         [MaxLength(100)]
-        public string Username { get; set; } 
+        [Column("Nome")]
+        public string Username { get; set; } = string.Empty;
         
         [Required]
-        public byte[] PasswordHash { get; set; } 
+        [Column("Senha")] 
+        public string Password { get; set; } = string.Empty;
         
-        [Required]
-        public byte[] PasswordSalt { get; set; } 
-        
-        // Relacionamento com Favoritos
-        public ICollection<CidadeFavorita> CidadesFavoritas { get; set; }
+        // Relacionamento com Favoritos (Manter)
+        public ICollection<Favorito> Favoritos { get; set; } = new List<Favorito>();
     }
 }

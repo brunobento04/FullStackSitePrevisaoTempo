@@ -8,7 +8,7 @@ namespace PrevisaoClimatica.API.DTOs
         public string Username { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 100 caracteres.")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "A senha deve ter entre 4 e 100 caracteres.")]
         public string Password { get; set; } = string.Empty;
     }
 }
