@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs'; // <-- Importe BehaviorSubject e Observable
+import { BehaviorSubject, Observable } from 'rxjs';
 
-// (Manter a interface Credentials se você usou para corrigir o erro)
 interface Credentials {
     [key: string]: string;
 }
@@ -46,7 +45,6 @@ export class Auth {
    * Realiza o logout, limpando o estado e o cache.
    */
   logout(): void {
-    // 5. LOGOUT: Emite o novo estado 'false' e remove do cache
     this.loggedInSubject.next(false);
     localStorage.removeItem(this.USER_KEY);
   }

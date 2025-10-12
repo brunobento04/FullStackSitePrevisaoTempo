@@ -16,12 +16,10 @@ export class Detalhes implements OnInit {
   private weatherService = inject(Weather);
   
   cidade: string = '';
-  // Observables para carregar os dados no template com o pipe 'async'
   previsaoAtual$: Observable<PrevisaoAtual | null> = of(null);
   previsao5Dias$: Observable<PrevisaoDia[] | null> = of(null);
 
   ngOnInit(): void {
-    // Obtém o parâmetro 'cidade' da rota
     this.route.paramMap.subscribe(params => {
       const cidadeParam = params.get('cidade');
       if (cidadeParam) {
@@ -32,7 +30,6 @@ export class Detalhes implements OnInit {
   }
 
   carregarPrevisoes(cidade: string): void {
-    // Busca a previsão atual e detalhada usando os mocks
     this.previsaoAtual$ = this.weatherService.getPrevisaoAtual(cidade);
     this.previsao5Dias$ = this.weatherService.getPrevisaoDetalhada(cidade);
   }

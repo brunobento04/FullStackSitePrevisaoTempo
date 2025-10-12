@@ -59,6 +59,5 @@ export class Home {
   
   adicionarAosFavoritos(cidade: string) {
     alert(`MOCK: Cidade ${cidade} adicionada aos favoritos!`);
-    // Futuramente, chamar o FavoritosService para adicionar a cidade ao banco.
   }
 }
