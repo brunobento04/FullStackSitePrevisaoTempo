@@ -4,5 +4,11 @@ CREATE TABLE dbo.Usuarios (
     [Senha] VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE [dbo].[CidadesFavoritas] (
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Nome] VARCHAR(255) NOT NULL,
+    [UsuarioId] INT NOT NULL,
+    CONSTRAINT UQ_Usuario_Cidade UNIQUE (UsuarioId, Nome)
+);
 
 
